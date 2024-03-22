@@ -3,15 +3,15 @@ package db
 import (
 	"database/sql"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 type DB struct {
 	DB *sql.DB
 }
 
-func NewDb() (*DB, error) {
-	db, err := sql.Open("mysql", "root:password@tcp(localhost:3306)/readwise")
+func NewDb(cnf mysql.Config) (*DB, error) {
+	db, err := sql.Open("mysql", cnf.FormatDSN())
 	if err != nil {
 		return nil, err
 	}

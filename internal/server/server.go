@@ -15,6 +15,7 @@ import (
 	"github.com/Dimix-international/readwise-go/internal/models"
 	"github.com/Dimix-international/readwise-go/internal/service"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
@@ -50,7 +51,7 @@ func (s *Server) Run() {
 }
 
 func (s *Server) launchSever() error {
-	client, err := db.NewDb()
+	client, err := db.NewDb(mysql.Config{User: "root", Passwd: "dima94dimix@MySQL",  Net: "tcp", DBName: "readwise", Addr: "localhost:3306"})
 	if err != nil {
 		return err
 	}
