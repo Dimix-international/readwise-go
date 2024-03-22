@@ -6,6 +6,7 @@ import (
 
 	"github.com/Dimix-international/readwise-go/internal/service"
 	"github.com/Dimix-international/readwise-go/internal/utils"
+
 	"github.com/gorilla/mux"
 )
 

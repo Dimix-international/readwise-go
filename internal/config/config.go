@@ -28,7 +28,11 @@ type ServerHTTP struct {
 }
 
 type DB struct {
-	Name string `env:"MYSQL_NAME,required,notEmpty"`
+	User     string `env:"MYSQL_USER,required,notEmpty"`
+	Name     string `env:"MYSQL_NAME,required,notEmpty"`
+	Net      string `env:"MYSQL_NET,required,notEmpty"`
+	Password string `env:"MYSQL_PASSWORD,required,notEmpty"`
+	Addr     string `env:"MYSQL_ADDRESS,required,notEmpty"`
 }
 
 func MustLoadConfig() Config {

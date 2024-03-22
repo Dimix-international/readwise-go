@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Dimix-international/readwise-go/db"
 	"github.com/Dimix-international/readwise-go/internal/config"
 	"github.com/Dimix-international/readwise-go/internal/handlers"
 	"github.com/Dimix-international/readwise-go/internal/models"
@@ -49,6 +50,11 @@ func (s *Server) Run() {
 }
 
 func (s *Server) launchSever() error {
+	client, err := db.NewDb()
+	if err != nil {
+		return err
+	}
+
 	router := mux.NewRouter()
 
 	httpServer := &http.Server{
@@ -59,7 +65,7 @@ func (s *Server) launchSever() error {
 		IdleTimeout:  s.cfg.HTTPServer.IdleTimeout,
 	}
 
-	handlers.NewFileHandler(router, service.NewFileService()).RegisterRoutes()
+	handlers.NewFileHandler(router, service.NewFileService(db.NewBookStorage(client.DB))).RegisterRoutes()
 
 	log.Printf("server started on port: %v", s.cfg.HTTPServer.Port)
 
