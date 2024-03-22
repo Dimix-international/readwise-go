@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/Dimix-international/readwise-go/internal/config"
+	"github.com/Dimix-international/readwise-go/internal/server"
+)
 
 func main() {
-	fmt.Println("main")
+	cfg := config.MustLoadConfig()
+	server.NewServer(cfg).Run()
 }
