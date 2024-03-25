@@ -1,7 +1,10 @@
 package service
 
-import "mime/multipart"
+import (
+	"context"
+	"mime/multipart"
+)
 
 type ServiceFile interface {
-	ParseKindleFile(file *multipart.File, userID string) error
+	ParseKindleFile(ctx context.Context, file *multipart.File, userID string) error
 }

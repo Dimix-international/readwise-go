@@ -33,7 +33,7 @@ func (s *FileHandler) handleParseKindleFile(w http.ResponseWriter, r *http.Reque
 	}
 	defer file.Close()
 
-	if err := s.fileService.ParseKindleFile(&file, userID); err != nil {
+	if err := s.fileService.ParseKindleFile(r.Context(), &file, userID); err != nil {
 		utils.WriteJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}

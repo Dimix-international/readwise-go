@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/Dimix-international/readwise-go/internal/models"
@@ -14,14 +15,52 @@ func NewBookStorage(db *sql.DB) *BookMySQLStorage {
 	return &BookMySQLStorage{db: db}
 }
 
-func (b *BookMySQLStorage) CreateBook(models.Book) error {
+func (s *BookMySQLStorage) CreateBook(ctx context.Context, b models.Book) error {
+	if _, err := s.db.ExecContext(ctx, `
+		INSERT INTO books (isbn, title, authors)
+		VALUES (?, ?, ?, ?)
+	`, b.ISBN, b.Title, b.Authors, b.CreatedAt,
+	); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (b *BookMySQLStorage) CreateHighlights([]models.Highlight) error {
+func (s *BookMySQLStorage) CreateHighlights(ctx context.Context, hs []models.Highlight) error {
+	values := []interface{}{}
+
+	query := "INSERT INTO highlights (text, location, note, userId, bookId) VALUES "
+
+	for i := range hs {
+		query += "(?, ?, ?, ?, ?),"
+		values = append(values, hs[i].Text, hs[i].Location, hs[i].Note, hs[i].UserID, hs[i].BookID)
+	}
+
+	query = query[:len(query)-1]
+
+	_, err := s.db.ExecContext(ctx, query, values...)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (b *BookMySQLStorage) BookByISBN(string) (models.Book, error) {
-	return models.Book{}, nil
+func (s *BookMySQLStorage) BookByISBN(ctx context.Context, isbn string) (models.Book, error) {
+	book := models.Book{}
+
+	if err := s.db.QueryRowContext(ctx, `SELECT * FROM books WHERE isbn = ?`, isbn).Scan(&book); err != nil {
+		return models.Book{}, models.NotFoundError
+	}
+
+	return book, nil
+}
+
+func (s *BookMySQLStorage) RandomHighlights(ctx context.Context, limit, userId int) ([]*models.Highlight, error) {
+	return nil, nil
+}
+
+func (s *BookMySQLStorage) Users(ctx context.Context) ([]*models.User, error) {
+	return nil, nil
 }

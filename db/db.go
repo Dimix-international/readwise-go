@@ -19,6 +19,7 @@ func NewDb(cnf mysql.Config) (*DB, error) {
 	if err := db.Ping(); err != nil {
 		return nil, err
 	}
+
 	return &DB{DB: db}, nil
 }
 

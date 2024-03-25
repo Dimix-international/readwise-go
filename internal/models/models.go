@@ -8,6 +8,7 @@ import (
 
 var (
 	InternalServerError = errors.New("internal server error")
+	NotFoundError       = errors.New("not found")
 )
 
 type RawExtractBook struct {

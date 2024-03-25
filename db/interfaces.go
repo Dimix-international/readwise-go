@@ -1,9 +1,15 @@
 package db
 
-import "github.com/Dimix-international/readwise-go/internal/models"
+import (
+	"context"
+
+	"github.com/Dimix-international/readwise-go/internal/models"
+)
 
 type BookStorage interface {
-	CreateBook(models.Book) error
-	CreateHighlights([]models.Highlight) error
-	BookByISBN(string) (models.Book, error)
+	CreateBook(ctx context.Context, book models.Book) error
+	CreateHighlights(ctx context.Context, highlights []models.Highlight) error
+	BookByISBN(ctx context.Context, ID string) (models.Book, error)
+	RandomHighlights(ctx context.Context, limit, userId int) ([]*models.Highlight, error)
+	Users(ctx context.Context) ([]*models.User, error)
 }
