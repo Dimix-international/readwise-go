@@ -51,7 +51,13 @@ func (s *Server) Run() {
 }
 
 func (s *Server) launchSever() error {
-	client, err := db.NewDb(mysql.Config{User: "root", Passwd: "dima94dimix@MySQL",  Net: "tcp", DBName: "readwise", Addr: "localhost:3306"})
+	client, err := db.NewDb(mysql.Config{
+		User:   s.cfg.Database.User,
+		Passwd: s.cfg.Database.Password,
+		Net:    s.cfg.Database.Net,
+		DBName: s.cfg.Database.Name,
+		Addr:   s.cfg.Database.Addr,
+	})
 	if err != nil {
 		return err
 	}

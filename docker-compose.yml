@@ -5,7 +5,7 @@ services:
         image: mysql:latest
         restart: always
         environment:
-            MYSQL_ROOT_PASSWORD: dima94dimix@MySQL
+            MYSQL_ROOT_PASSWORD: dima94MYSQL
             MYSQL_DATABASE: readwise
         ports:
             - '3007:3306'
