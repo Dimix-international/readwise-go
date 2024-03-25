@@ -78,7 +78,18 @@ func (s *Server) launchSever() error {
 		IdleTimeout:  s.cfg.HTTPServer.IdleTimeout,
 	}
 
-	handlers.NewFileHandler(router, service.NewFileService(db.NewBookStorage(client.DB))).RegisterRoutes()
+	bookStorage := db.NewBookStorage(client.DB)
+	fileService := service.NewFileService(bookStorage)
+
+	handlers.NewFileHandler(router, fileService).RegisterRoutes()
+	handlers.NewCloudHandler(
+		router,
+		service.NewCloudService(
+			fileService,
+			service.NewUsersService(bookStorage),
+			service.NewSendGridMailer(s.cfg.Mailer.SenderEmailKey, s.cfg.Mailer.FromEmail),
+		),
+	).RegisterRoutes()
 
 	log.Printf("server started on port: %v", s.cfg.HTTPServer.Port)
 

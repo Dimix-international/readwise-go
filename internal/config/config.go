@@ -18,6 +18,7 @@ var (
 type Config struct {
 	HTTPServer ServerHTTP
 	Database   DB
+	Mailer     EmailSender
 }
 
 type ServerHTTP struct {
@@ -33,6 +34,11 @@ type DB struct {
 	Net      string `env:"MYSQL_NET,required,notEmpty"`
 	Password string `env:"MYSQL_PASSWORD,required,notEmpty"`
 	Addr     string `env:"MYSQL_ADDRESS,required,notEmpty"`
+}
+
+type EmailSender struct {
+	SenderEmailKey string `env:"SENDGRID_API_KEY"`
+	FromEmail      string `env:"FROM_EMAIL"`
 }
 
 func MustLoadConfig() Config {

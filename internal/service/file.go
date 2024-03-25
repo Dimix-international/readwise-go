@@ -37,6 +37,22 @@ func (s *FileService) ParseKindleFile(ctx context.Context, file *multipart.File,
 	return nil
 }
 
+func (s *FileService) RandomHighlights(ctx context.Context, limit, userID int) ([]*models.Highlight, error) {
+	hs, err := s.bookStorage.RandomHighlights(ctx, limit, userID)
+	if err != nil {
+		return nil, err
+	}
+	return hs, nil
+}
+
+func (s *FileService) BookByISBN(ctx context.Context, ID string) (models.Book, error) {
+	book, err := s.bookStorage.BookByISBN(ctx, ID)
+	if err != nil {
+		return models.Book{}, err
+	}
+	return book, nil
+}
+
 func (s *FileService) parseKindleExtractFile(file *multipart.File) (*models.RawExtractBook, error) {
 	decoder := json.NewDecoder(*file)
 

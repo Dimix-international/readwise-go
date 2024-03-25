@@ -57,10 +57,41 @@ func (s *BookMySQLStorage) BookByISBN(ctx context.Context, isbn string) (models.
 	return book, nil
 }
 
-func (s *BookMySQLStorage) RandomHighlights(ctx context.Context, limit, userId int) ([]*models.Highlight, error) {
-	return nil, nil
+func (s *BookMySQLStorage) RandomHighlights(ctx context.Context, limit, userID int) ([]*models.Highlight, error) {
+	rows, err := s.db.Query("SELECT * FROM highlights WHERE userId = ? ORDER BY RAND() LIMIT ?", userID, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	var highlights []*models.Highlight
+	for rows.Next() {
+		h := new(models.Highlight)
+
+		if err := rows.Scan(h); err != nil {
+			return nil, err
+		}
+
+		highlights = append(highlights, h)
+	}
+
+	return highlights, nil
 }
 
 func (s *BookMySQLStorage) Users(ctx context.Context) ([]*models.User, error) {
-	return nil, nil
+	rows, err := s.db.QueryContext(ctx, "SELECT * FROM users")
+	if err != nil {
+		return nil, err
+	}
+	users := make([]*models.User, 0)
+	for rows.Next() {
+		u := new(models.User)
+
+		if err := rows.Scan(u); err != nil {
+			return nil, err
+		}
+
+		users = append(users, u)
+	}
+
+	return users, nil
 }
